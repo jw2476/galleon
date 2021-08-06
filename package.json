@@ -1,0 +1,19 @@
+{
+  "name": "galleon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd client && npm i && cd ../server && npm i",
+    "dev": "concurrently 'npm run client' 'npm run server'",
+    "client": "cd client && npm run dev",
+    "server": "cd server && nodemon --ext 'ts' --exec 'npx tsc && node .'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.12"
+  }
+}
