@@ -1,7 +1,9 @@
 import * as express from 'express'
 import {Client} from 'discord.js'
 import api from './api'
-import * as bodyParser from "body-parser"
+import { config } from "dotenv"
+
+config()
 
 const app = express()
 const client = new Client()
@@ -22,4 +24,4 @@ client.on('ready', () => {
     console.log("Discord bot ready!")
 })
 
-client.login("ODczMTM2OTU0MjkwNjEwMjA4.YQ0CKA.vBgyta2wrBQXl83U7pZL_nigsjo")
+client.login(process.env.BOT_TOKEN)
