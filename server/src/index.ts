@@ -3,8 +3,20 @@ import {Client} from 'discord.js'
 import api from './api'
 import { config } from "dotenv"
 import bot from "./bot";
+import {connect} from "mongoose"
+
+const {
+    MONGO_URL,
+    BOT_TOKEN
+} = process.env
 
 config()
+connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("DB Connected!")
+})
 
 const app = express()
 
@@ -24,4 +36,4 @@ bot.on('ready', () => {
     console.log("Discord bot ready!")
 })
 
-bot.login(process.env.BOT_TOKEN)
+bot.login(BOT_TOKEN)

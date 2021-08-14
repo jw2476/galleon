@@ -4,6 +4,7 @@ import {config} from "dotenv"
 import * as jwt from "jsonwebtoken"
 import {Guild} from "discord.js"
 import bot from "../bot";
+import User from "../models/user"
 
 config()
 
@@ -35,8 +36,18 @@ export default async function (req: Request, res: Response) {
 
         const matching_users = (await Promise.all(bot.guilds.cache.map((guild: Guild) => guild.members.fetch(user.data.id)))).flat()
         if (matching_users.length !== 0) {
-            const user_token = jwt.sign(user.data.username, CLIENT_SECRET)
+            const member = matching_users[0]
+
+            const user_token = jwt.sign(member.user.username, CLIENT_SECRET)
             res.json(user_token)
+            if (!await User.findOne({discordID: member.user.id})) {
+                await new User({
+                    username: member.user.username,
+                    discordID: member.user.id,
+                    guildName: member.guild.name,
+                    guildID: member.guild.id
+                }).save()
+            }
         } else {
             res.sendStatus(403)
         }
