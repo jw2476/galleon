@@ -2,12 +2,13 @@ import {Request, Response} from "express"
 import axios from "axios"
 import {config} from "dotenv"
 import * as jwt from "jsonwebtoken"
-import {User} from "discord.js"
+import {Guild} from "discord.js"
+import bot from "../bot";
 
 config()
 
 export default async function (req: Request, res: Response) {
-    let { code } = req.body
+    let {code} = req.body
     const {CLIENT_ID, CLIENT_SECRET} = process.env
     let redirect_uri = "http://localhost:8000/" // TODO: CHANGE THIS
 
@@ -24,7 +25,6 @@ export default async function (req: Request, res: Response) {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         })
-        if (!tokenResponse) return
 
         const discord_token = tokenResponse.data.access_token
         const user = await axios.get("https://discord.com/api/users/@me", {
@@ -32,13 +32,18 @@ export default async function (req: Request, res: Response) {
                 "Authorization": `Bearer ${discord_token}`
             }
         })
-        if (!user) return
 
-        console.log(user.data)
-        const user_token = jwt.sign(user.data.username, CLIENT_SECRET)
-        res.json(user_token)
+        const matching_users = (await Promise.all(bot.guilds.cache.map((guild: Guild) => guild.members.fetch(user.data.id)))).flat()
+        if (matching_users.length !== 0) {
+            const user_token = jwt.sign(user.data.username, CLIENT_SECRET)
+            res.json(user_token)
+        } else {
+            res.sendStatus(403)
+        }
+
+
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.sendStatus(400)
     }
 
