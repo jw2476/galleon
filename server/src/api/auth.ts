@@ -40,8 +40,6 @@ export default async function (req: Request, res: Response) {
         } else {
             res.sendStatus(403)
         }
-
-
     } catch (error) {
         console.error(error)
         res.sendStatus(400)
