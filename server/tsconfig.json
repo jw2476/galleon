@@ -4,9 +4,13 @@
     "target": "ESNext",
     "sourceMap": true,
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "**/*"
   ]
 }
