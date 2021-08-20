@@ -45,7 +45,8 @@ export default async function (req: Request, res: Response) {
                     username: member.user.username,
                     discordID: member.user.id,
                     guildName: member.guild.name,
-                    guildID: member.guild.id
+                    guildID: member.guild.id,
+                    admin: member.hasPermission("ADMINISTRATOR")
                 }).save()
             }
         } else {

@@ -2,6 +2,7 @@
     import 'bulma/css/bulma.css'
     import Authenticate from "./Authenticate.svelte";
     import RequestForm from "./RequestForm.svelte";
+    import AdminConsole from "./AdminConsole.svelte";
 </script>
 
 <main>
@@ -22,6 +23,13 @@
     <section>
         <div class="container box">
             <RequestForm/>
+        </div>
+    </section>
+    <br>
+    <br>
+    <section>
+        <div class="container">
+            <AdminConsole/>
         </div>
     </section>
 </main>
