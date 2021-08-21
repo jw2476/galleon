@@ -39,7 +39,7 @@ app.use("/api", async (req, res, next) => {
         res.locals.user = await User.findOne({username})
         next()
     } catch {
-        res.sendStatus(401)
+        next()
     }
 })
 app.use("/api", api)
