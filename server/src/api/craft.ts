@@ -9,21 +9,21 @@ import * as recipes from "../data/javelindata_crafting.json"
 export default async (req: Request, res: Response) => {
     const {
         item,
-        primary,
-        secondary,
+        perk,
+        attempts,
         notes
     } = req.body
     const dbUser: IUser = res.locals.user
     const guild = await bot.guilds.fetch(dbUser.guildID)
     const member: GuildMember = await guild.members.fetch(dbUser.discordID)
 
-    const crafter = await findCrafter(item)
+    const crafter = await findCrafter(item, dbUser)
     const crafterDiscord = await guild.members.fetch(crafter.discordID)
 
     await new CraftingRequest({
         item,
-        primary,
-        secondary,
+        perk,
+        attempts,
         notes,
         madeBy: dbUser._id,
         assignedTo: crafter._id
@@ -42,9 +42,9 @@ export default async (req: Request, res: Response) => {
         .setColor('#0099ff')
         .setTitle(item)
         .setAuthor(member.displayName, member.user.avatarURL())
-        .addField("Primary Buff", primary, true)
-        .addField("Secondary Buff", secondary, true)
-        .addField("Crafted By", `${crafterDiscord}`, true)
+        .addField("Perk", perk, true)
+        .addField("Requested Attempts", attempts, true)
+        .addField("Assigned To", `${crafterDiscord}`, true)
         .setDescription(notes ? notes : "") // no undefined
     await channel.send(embed)
 }
@@ -54,6 +54,5 @@ async function findCrafter(item: String, user: IUser): Promise<IUser> {
     let recipe = recipes.find(recipe => recipe.RecipeID === itemID)
     let skill = recipe.Tradeskill
     let availableCrafters = await User.find({skills: skill, guildID: user.guildID})
-    let crafter = availableCrafters[Math.floor(Math.random() * availableCrafters.length)]
-    return crafter
+    return availableCrafters[Math.floor(Math.random() * availableCrafters.length)]
 }

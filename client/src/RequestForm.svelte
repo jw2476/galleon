@@ -14,16 +14,19 @@
     {/if}
 </div>
 <div class="field">
-    <label class="label">Primary Buff</label>
+    <label class="label">Perk</label>
     <div class="control">
-        <input class="input" type="text" placeholder="Strength" bind:value={primary}>
+        <input class="input" type="text" placeholder="Strength" bind:value={perk}>
     </div>
 </div>
 <div class="field">
-    <label class="label">Secondary Buff</label>
+    <label class="label">Total Attempts</label>
     <div class="control">
-        <input class="input" type="text" placeholder="Dexterity" bind:value={secondary}>
+        <input class="input" type="text" placeholder="1" bind:value={attempts}>
     </div>
+    {#if attemptsFormatError}
+        <p class="help is-danger">Attempts needs to be a whole number</p>
+    {/if}
 </div>
 <div class="field">
     <label class="label">Notes for the Crafter</label>
@@ -40,8 +43,9 @@
 
     let item
     let itemRequiredError = false
-    let primary = "Any"
-    let secondary = "Any"
+    let perk = "Any"
+    let attempts = 1
+    let attemptsFormatError = false
     let notes
 
     api.get("/javelindata_craftingnames.json").then(res => {
@@ -53,13 +57,20 @@
             itemRequiredError = true
             return
         }
+        
+        if (isNaN(attempts)) {
+            attemptsFormatError = true
+            return
+        }
+
 
         itemRequiredError = false
+        attemptsFormatError = false
 
         api.post("/craft", {
             item,
-            primary,
-            secondary,
+            perk,
+            attempts,
             notes
         })
     }

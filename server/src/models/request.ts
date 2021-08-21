@@ -4,20 +4,20 @@ import ObjectID = Schema.Types;
 
 type ICraftingRequestBase = {
     item: string,
-    primary: string,
-    secondary: string,
+    perk: string,
     notes: string,
+    attempts: number,
     madeBy: IUser,
     assignedTo: IUser
 }
 
-type ICraftingRequest= ICraftingRequestBase & Document
+export type ICraftingRequest = ICraftingRequestBase & Document
 
 const craftingRequestSchema = new Schema({
     item: String,
-    primary: String,
-    secondary: String,
+    perk: String,
     notes: String,
+    attempts: Number,
     madeBy: {type: ObjectID, ref: "User"},
     assignedTo: {type: ObjectID, ref: "User"}
 })

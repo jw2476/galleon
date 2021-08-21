@@ -3,6 +3,7 @@
     import Authenticate from "./Authenticate.svelte";
     import RequestForm from "./RequestForm.svelte";
     import AdminConsole from "./AdminConsole.svelte";
+    import CraftingRequests from "./CraftingRequests.svelte";
 </script>
 
 <main>
@@ -23,6 +24,13 @@
     <section>
         <div class="container box">
             <RequestForm/>
+        </div>
+    </section>
+    <br>
+    <br>
+    <section class="section">
+        <div class="container box">
+            <CraftingRequests/>
         </div>
     </section>
     <br>
