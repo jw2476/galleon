@@ -7,7 +7,8 @@
     "install": "cd client && npm i && cd ../server && npm i",
     "dev": "concurrently 'npm run client' 'npm run server'",
     "client": "cd client && npm run dev",
-    "server": "cd server && nodemon --ext 'ts' --exec 'npx tsc && node .'"
+    "server": "cd server && nodemon --ext 'ts' --exec 'npx tsc && node .'",
+    "build": "cd client && npm run build && cd ../server && npx tsc"
   },
   "keywords": [],
   "author": "",
