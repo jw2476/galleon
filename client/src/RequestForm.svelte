@@ -41,7 +41,7 @@
 
     let names = []
 
-    let item
+    let item = "Select an Item"
     let itemRequiredError = false
     let perk = "Any"
     let attempts = 1
@@ -53,11 +53,11 @@
     })
 
     function submitCraftingRequest() {
-        if (!item) { // Checks for not selected, svelte doesnt like select values that are added after page load
+        if (!item || item === "Select an Item") { // Checks for not selected, svelte doesnt like select values that are added after page load
             itemRequiredError = true
             return
         }
-        
+
         if (isNaN(attempts)) {
             attemptsFormatError = true
             return
