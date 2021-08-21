@@ -11,7 +11,7 @@
     let forbidden = false
 
     if (authenticating) {
-        let res = api.post("/auth", {code}).then(res => {
+        let res = api.post("/auth", {code, redirect_uri: window.location.href.split('?')[0]}).then(res => {
             localStorage.setItem("token", res.data)
             authenticated = true
         }).catch(error => {

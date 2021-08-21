@@ -8,10 +8,10 @@ import User from "../models/user"
 
 config()
 
+const {CLIENT_ID, CLIENT_SECRET} = process.env
+
 export default async function (req: Request, res: Response) {
-    let {code} = req.body
-    const {CLIENT_ID, CLIENT_SECRET} = process.env
-    let redirect_uri = "http://localhost:8000/" // TODO: CHANGE THIS
+    let {code, redirect_uri} = req.body
 
     let data = {
         "client_id": CLIENT_ID,
