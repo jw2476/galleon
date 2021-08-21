@@ -2,9 +2,9 @@
     import api from "./api";
     import {Button, Progress} from "svelma"
 
-    const AUTH_URL = "https://discord.com/api/oauth2/authorize?client_id=873136954290610208&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code&scope=identify"
+    const AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=873136954290610208&redirect_uri=${encodeURI(window.location.href)}&response_type=code&scope=identify`
 
-    let authenticated = !!localStorage.getItem("token")
+    export let authenticated = !!localStorage.getItem("token")
     let code = new URLSearchParams(window.location.search).get("code")
     let authenticating = code && !authenticated
     let invalid_code = false
@@ -13,6 +13,7 @@
     if (authenticating) {
         let res = api.post("/auth", {code}).then(res => {
             localStorage.setItem("token", res.data)
+            authenticated = true
         }).catch(error => {
             switch (error.response.status) {
                 case(400) : {

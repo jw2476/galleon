@@ -4,6 +4,8 @@
     import RequestForm from "./RequestForm.svelte";
     import AdminConsole from "./AdminConsole.svelte";
     import CraftingRequests from "./CraftingRequests.svelte";
+
+    let authenticated
 </script>
 
 <main>
@@ -16,30 +18,32 @@
                 Logistics tool for Pirate Gaming
             </p>
             <br>
-            <Authenticate/>
+            <Authenticate bind:authenticated={authenticated}/>
         </div>
     </section>
-    <br>
-    <br>
-    <section>
-        <div class="container box">
-            <RequestForm/>
-        </div>
-    </section>
-    <br>
-    <br>
-    <section class="section">
-        <div class="container box">
-            <CraftingRequests/>
-        </div>
-    </section>
-    <br>
-    <br>
-    <section>
-        <div class="container">
-            <AdminConsole/>
-        </div>
-    </section>
+    {#if authenticated}
+        <br>
+        <br>
+        <section>
+            <div class="container box">
+                <RequestForm/>
+            </div>
+        </section>
+        <br>
+        <br>
+        <section class="section">
+            <div class="container box">
+                <CraftingRequests/>
+            </div>
+        </section>
+        <br>
+        <br>
+        <section>
+            <div class="container">
+                <AdminConsole/>
+            </div>
+        </section>
+    {/if}
 </main>
 
 <style lang="sass">
