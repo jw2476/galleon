@@ -9,7 +9,8 @@ import User from "./models/user";
 const {
     MONGO_URL,
     BOT_TOKEN,
-    CLIENT_SECRET
+    CLIENT_SECRET,
+    PORT
 } = process.env
 
 config()
@@ -42,8 +43,8 @@ app.use("/api", async (req, res, next) => {
 app.use("/api", api)
 app.use("/api", express.static("data"))
 
-app.listen(8000, () => {
-    console.log("Server is running at http://localhost:8000/")
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}/`)
 })
 
 // DISCORD
