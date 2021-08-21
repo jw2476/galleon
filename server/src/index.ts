@@ -5,6 +5,7 @@ import bot from "./bot";
 import {connect} from "mongoose"
 import * as jwt from "jsonwebtoken"
 import User from "./models/user";
+import * as cors from "cors"
 
 const {
     MONGO_URL,
@@ -26,6 +27,7 @@ const app = express()
 // WEB
 
 app.use(require('body-parser').json())
+app.use(cors())
 app.use(express.static("public"))
 app.use("/api", async (req, res, next) => {
     if (!req.headers.authorization) {
