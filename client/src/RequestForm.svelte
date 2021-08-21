@@ -34,7 +34,14 @@
         <textarea class="textarea" bind:value={notes}></textarea>
     </div>
 </div>
-<button class="button is-primary" on:click={submitCraftingRequest}>Submit</button>
+<div class="field">
+    <div class="control">
+        <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit</button>
+    </div>
+    {#if success}
+        <p class="help is-primary">Successfully requested</p>
+    {/if}
+</div>
 
 <script>
     import api from "./api";
@@ -47,12 +54,17 @@
     let attempts = 1
     let attemptsFormatError = false
     let notes
+    let loading = false
+    let success = false
 
     api.get("/javelindata_craftingnames.json").then(res => {
         names = ["Select an Item", ...Object.values(res.data).sort()]
     })
 
-    function submitCraftingRequest() {
+    async function submitCraftingRequest() {
+        success = false
+        loading = true
+
         if (!item || item === "Select an Item") { // Checks for not selected, svelte doesnt like select values that are added after page load
             itemRequiredError = true
             return
@@ -67,11 +79,14 @@
         itemRequiredError = false
         attemptsFormatError = false
 
-        api.post("/craft", {
+        await api.post("/craft", {
             item,
             perk,
             attempts,
             notes
         })
+
+        success = true
+        loading = false
     }
 </script>

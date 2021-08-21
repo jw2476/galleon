@@ -47,6 +47,8 @@ export default async (req: Request, res: Response) => {
         .addField("Assigned To", `${crafterDiscord}`, true)
         .setDescription(notes ? notes : "") // no undefined
     await channel.send(embed)
+
+    res.sendStatus(200)
 }
 
 async function findCrafter(item: String, user: IUser): Promise<IUser> {
