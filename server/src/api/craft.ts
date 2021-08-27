@@ -30,9 +30,9 @@ export default async (req: Request, res: Response) => {
     }).save()
 
     let channel: TextChannel
-    let channels = guild.channels.cache.filter(channel => channel.name === "🔨| crafting-requests" && channel.type === "text")
+    let channels = guild.channels.cache.filter(channel => channel.name === "🔨│crafting-requests" && channel.type === "text")
     if (channels.size === 0) {
-        channel = await guild.channels.create("crafting-requests", {type: "text"})
+        channel = await guild.channels.create("🔨│crafting-requests", {type: "text"})
         await channel.send(`This channel has been created by ${bot.user} automatically`)
     } else {
         channel = channels.first() as TextChannel
