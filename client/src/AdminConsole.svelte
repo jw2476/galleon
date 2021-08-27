@@ -8,15 +8,16 @@
             {/each}
             </thead>
             <tbody>
-            <tr>
-                {#each users as user}
+            {#each users as user}
+                <tr>
                     <th>{user.username}</th>
                     {#each skills as skill}
                         <td><input type="checkbox" checked="{user.skills.includes(skill)}"
                                    on:click={() => toggle(skill, user)}></td>
                     {/each}
-                {/each}
-            </tr>
+                </tr>
+            {/each}
+
             </tbody>
         </table>
         <button class="button is-primary" on:click={submit}>Submit</button>
