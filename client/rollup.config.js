@@ -3,7 +3,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
-import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import preprocess from "svelte-preprocess";
 import postcss from 'rollup-plugin-postcss'
@@ -12,7 +11,7 @@ import postcss from 'rollup-plugin-postcss'
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.ts',
+	input: 'src/main.js',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -41,10 +40,6 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
-		typescript({
-			sourceMap: true,
-			inlineSources: !production
-		}),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
