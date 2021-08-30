@@ -1,17 +1,17 @@
 import {Router} from "express";
 import auth from "./auth";
-import craft from "./craft";
 import users from "./users";
 import setSkills from "./setSkills";
-import craftingRequests from "./craftingRequests";
-import complete from "./complete";
+import itemNames from "./itemNames";
+import recipeByName from "./recipeByName";
+import category from "./category";
 
 const router = Router();
 
 router.post("/auth", auth)
-router.post("/complete", complete)
-router.post("/craft", craft)
-router.get("/craftingRequests", craftingRequests)
+router.get("/category", category)
+router.get("/itemNames", itemNames)
+router.get("/recipeByName", recipeByName)
 router.post("/setSkills", setSkills)
 router.get("/users", users)
 

@@ -2,38 +2,38 @@
     <label class="label">Item</label>
     <div class="control">
         <div class="select">
-            <select bind:value={item}>
-                {#each names as name}
-                    <option>{name}</option>
-                {/each}
-            </select>
+            <a href="https://nwdb.info/db/item/{recipe?.itemID}">
+                <select bind:value={itemName} on:change={getRecipe}>
+                    {#each names as name}
+                        <option>{name}</option>
+                    {/each}
+                </select>
+            </a>
         </div>
     </div>
     {#if itemRequiredError}
         <p class="help is-danger">Please select an item</p>
     {/if}
 </div>
-<div class="field">
-    <label class="label">Perk</label>
-    <div class="control">
-        <input class="input" type="text" placeholder="Strength" bind:value={perk}>
+{#each Object.keys(itemChoices) as itemChoice, i}
+    <div class="field">
+        <label class="label">{'Item Choice ' + (i + 1)}</label>
+        <div class="control">
+            <div class="select">
+                <a href="https://nwdb.info/db/item/{selectedChoices[itemChoice]}">
+                    <select bind:value={selectedChoices[itemChoice]} on:change={() => {console.log(selectedChoices); selectedChoices = selectedChoices}}>
+                        {#each itemChoices[itemChoice] as item}
+                            <option value="{item.itemID}">{item.itemName}{item.minGearScoreBuff ? ` (+${item.minGearScoreBuff})` : ''}</option>
+                        {/each}
+                    </select>
+                </a>
+            </div>
+        </div>
+        {#if selectedChoices[itemChoice]?.endsWith("t51")}
+            <p class="help is-danger">You have selected a legendary material, only 10 of these can be crafted per 24 hours, so your request will be put in a queue and take a lot of time to be completed!</p>
+        {/if}
     </div>
-</div>
-<div class="field">
-    <label class="label">Total Attempts</label>
-    <div class="control">
-        <input class="input" type="text" placeholder="1" bind:value={attempts}>
-    </div>
-    {#if attemptsFormatError}
-        <p class="help is-danger">Attempts needs to be a whole number</p>
-    {/if}
-</div>
-<div class="field">
-    <label class="label">Notes for the Crafter</label>
-    <div class="control">
-        <textarea class="textarea" bind:value={notes}></textarea>
-    </div>
-</div>
+{/each}
 <div class="field">
     <div class="control">
         <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit</button>
@@ -43,50 +43,84 @@
     {/if}
 </div>
 
-<script>
+<script lang="ts">
     import api from "./api";
+    import {reloadEmbeds} from "./embed"
+
+    reloadEmbeds()
 
     let names = []
+    let itemChoices: Record<string, Recipe[]> = {}
+    let selectedChoices: Record<string, string> = {}
 
-    let item = "Select an Item"
+    let itemName = "Select an Item"
     let itemRequiredError = false
-    let perk = "Any"
-    let attempts = 1
-    let attemptsFormatError = false
-    let notes
     let loading = false
     let success = false
 
-    api.get("/javelindata_craftingnames.json").then(res => {
-        names = ["Select an Item", ...Object.values(res.data).sort()]
+    let recipe: Recipe
+
+    api.get("/itemNames").then(res => {
+        names = ["Select an Item", ...res.data.sort()]
     })
+
+    async function getRecipe() {
+        itemChoices = {}
+        const res = await api.get("/recipeByName", {params: {itemName}})
+        recipe = res.data
+        for (const ingredient of recipe.ingredients) {
+            if (ingredient.type === "Category_Only") {
+                const res = await api.get("/category", {params: {id: ingredient.ingredientID}})
+                itemChoices[ingredient.ingredientID] = res.data
+            }
+        }
+    }
 
     async function submitCraftingRequest() {
         success = false
-        loading = true
 
-        if (!item || item === "Select an Item") { // Checks for not selected, svelte doesnt like select values that are added after page load
+        if (!itemName || itemName === "Select an Item") { // Checks for not selected, svelte doesnt like select values that are added after page load
             itemRequiredError = true
             return
         }
 
-        if (isNaN(attempts)) {
-            attemptsFormatError = true
-            return
-        }
-
+        loading = true
 
         itemRequiredError = false
-        attemptsFormatError = false
 
         await api.post("/craft", {
-            item,
-            perk,
-            attempts,
-            notes
+            itemName
         })
 
         success = true
         loading = false
     }
+
+    type IngredientType = undefined | "Category_Only" | "Item" | "Currency"
+
+    type Ingredient = {
+        ingredientID: string
+        ingredientName: string
+        type: IngredientType
+        quantity: number
+    }
+
+    type Recipe = {
+        itemID: string
+        itemName: string
+        itemType: string
+        outputQuantity: number
+        ingredients: Ingredient[]
+        tradeskill: string
+        recipeLevel: number
+        cooldownSeconds?: number
+        amountPerCooldown?: number
+        bindOnPickup: boolean
+        bindOnEquip: boolean
+        minGearScore?: number
+        maxGearScore?: number
+        minGearScoreBuff?: number
+        maxGearScoreBuff?: number
+    }
+
 </script>

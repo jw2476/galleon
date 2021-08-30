@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import 'bulma/css/bulma.css'
     import Authenticate from "./Authenticate.svelte";
     import RequestForm from "./RequestForm.svelte";
@@ -27,13 +27,6 @@
         <section>
             <div class="container box">
                 <RequestForm/>
-            </div>
-        </section>
-        <br>
-        <br>
-        <section class="section">
-            <div class="container box">
-                <CraftingRequests/>
             </div>
         </section>
         <br>
