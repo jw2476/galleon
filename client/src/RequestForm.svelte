@@ -20,16 +20,16 @@
         <label class="label">{'Item Choice ' + (i + 1)}</label>
         <div class="control">
             <div class="select">
-                <a href="https://nwdb.info/db/item/{selectedChoices[itemChoice]}">
-                    <select bind:value={selectedChoices[itemChoice]} on:change={() => {console.log(selectedChoices); selectedChoices = selectedChoices}}>
+                <a href="https://nwdb.info/db/item/{selectedChoices[itemChoice]?.itemID}">
+                    <select bind:value={selectedChoices[itemChoice]} on:change={() => selectedChoices = selectedChoices}>
                         {#each itemChoices[itemChoice] as item}
-                            <option value="{item.itemID}">{item.itemName}{item.minGearScoreBuff ? ` (+${item.minGearScoreBuff})` : ''}</option>
+                            <option value="{item}">{item.itemName}{item.minGearScoreBuff ? ` (+${item.minGearScoreBuff})` : ''}</option>
                         {/each}
                     </select>
                 </a>
             </div>
         </div>
-        {#if selectedChoices[itemChoice]?.endsWith("t51")}
+        {#if selectedChoices[itemChoice]?.itemID.endsWith("t51")}
             <p class="help is-danger">You have selected a legendary material, only 10 of these can be crafted per 24 hours, so your request will be put in a queue and take a lot of time to be completed!</p>
         {/if}
     </div>
@@ -51,7 +51,7 @@
 
     let names = []
     let itemChoices: Record<string, Recipe[]> = {}
-    let selectedChoices: Record<string, string> = {}
+    let selectedChoices: Record<string, Recipe> = {}
 
     let itemName = "Select an Item"
     let itemRequiredError = false
@@ -87,10 +87,6 @@
         loading = true
 
         itemRequiredError = false
-
-        await api.post("/craft", {
-            itemName
-        })
 
         success = true
         loading = false
