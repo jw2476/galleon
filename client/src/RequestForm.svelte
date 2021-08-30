@@ -2,7 +2,7 @@
     <label class="label">Item</label>
     <div class="control">
         <div class="select">
-            <a href="https://nwdb.info/db/item/{recipe?.itemID}">
+            <a href="https://nwdb.info/db/recipe/{recipe?.itemID}">
                 <select bind:value={itemName} on:change={getRecipe}>
                     {#each names as name}
                         <option>{name}</option>
@@ -20,7 +20,7 @@
         <label class="label">{'Item Choice ' + (i + 1)}</label>
         <div class="control">
             <div class="select">
-                <a href="https://nwdb.info/db/item/{selectedChoices[itemChoice]?.itemID}">
+                <a href="https://nwdb.info/db/recipe/{selectedChoices[itemChoice]?.itemID}">
                     <select bind:value={selectedChoices[itemChoice]} on:change={() => selectedChoices = selectedChoices}>
                         {#each itemChoices[itemChoice] as item}
                             <option value="{item}">{item.itemName}{item.minGearScoreBuff ? ` (+${item.minGearScoreBuff})` : ''}</option>
