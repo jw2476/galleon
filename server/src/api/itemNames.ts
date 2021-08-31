@@ -5,5 +5,5 @@ const {recipes} = getCraftingData()
 const whitelist = ["weapons", "armor", "tools", "concoctions", "consumables", "bags", "foods", "trinkets"]
 
 export default async (req: Request, res: Response) => {
-    res.json(recipes.filter(recipe => whitelist.includes(recipe.itemType)).map(recipe => recipe.itemName))
+    res.json(recipes.filter(recipe => whitelist.includes(recipe.itemType) && !recipe.bindOnPickup).map(recipe => recipe.itemName))
 }

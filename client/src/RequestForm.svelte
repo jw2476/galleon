@@ -15,25 +15,6 @@
         <p class="help is-danger">Please select an item</p>
     {/if}
 </div>
-{#each Object.keys(itemChoices) as itemChoice, i}
-    <div class="field">
-        <label class="label">{'Item Choice ' + (i + 1)}</label>
-        <div class="control">
-            <div class="select">
-                <a href="https://nwdb.info/db/item/{selectedChoices[itemChoice]?.itemID}">
-                    <select bind:value={selectedChoices[itemChoice]} on:change={() => selectedChoices = selectedChoices}>
-                        {#each itemChoices[itemChoice] as item}
-                            <option value="{item}">{item.itemName}{item.minGearScoreBuff ? ` (+${item.minGearScoreBuff})` : ''}</option>
-                        {/each}
-                    </select>
-                </a>
-            </div>
-        </div>
-        {#if selectedChoices[itemChoice]?.itemID.endsWith("t51")}
-            <p class="help is-danger">You have selected a legendary material, only 10 of these can be crafted per 24 hours, so your request will be put in a queue and take a lot of time to be completed!</p>
-        {/if}
-    </div>
-{/each}
 <div class="field">
     <div class="control">
         <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit</button>
@@ -50,8 +31,6 @@
     reloadEmbeds()
 
     let names = []
-    let itemChoices: Record<string, Recipe[]> = {}
-    let selectedChoices: Record<string, Recipe> = {}
 
     let itemName = "Select an Item"
     let itemRequiredError = false
@@ -65,26 +44,18 @@
     })
 
     async function getItemChoices(recipe: Recipe) {
-        if (recipe.ingredients) {
-            for (const ingredient of recipe.ingredients) {
-                if (ingredient.type === "Category_Only") {
-                    const res = await api.get("/category", {params: {id: ingredient.ingredientID}})
-                    const recipes: Recipe[] = res.data
-                    itemChoices[ingredient.ingredientID] = recipes
-                    for (const recipe of recipes) {
-                        await getItemChoices(recipe)
-                    }
-                } else {
-                    const res = await api.get("/recipeByName", {params: {itemName: ingredient.ingredientName}})
-                    const recipe: Recipe = res.data
-                    await getItemChoices(recipe)
-                }
+        for (let ingredient of recipe.ingredients) {
+            consol
+            if (ingredient.type === "Category_Only") {
+                const res = await api.get("/category", {id: ingredient.ingredientID})
+                console.log(recipe)
+                ingredient = res.data
+                console.log(recipe)
             }
         }
     }
 
     async function getRecipe() {
-        itemChoices = {}
         const res = await api.get("/recipeByName", {params: {itemName}})
         recipe = res.data
         loading = true

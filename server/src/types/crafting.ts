@@ -10,25 +10,27 @@ export type Ingredient = {
     quantity: number
 }
 
+export type Recipe = {
+    itemID: string
+    itemName: string
+    itemType: string
+    outputQuantity: number
+    ingredients: Ingredient[]
+    tradeskill: string
+    recipeLevel: number
+    cooldownSeconds?: number
+    amountPerCooldown?: number
+    bindOnPickup: boolean
+    bindOnEquip: boolean
+    minGearScore?: number
+    maxGearScore?: number
+    minGearScoreBuff?: number
+    maxGearScoreBuff?: number
+}
+
 
 export type CraftingData = {
-    recipes: [{
-        itemID: string
-        itemName: string
-        itemType: string
-        outputQuantity: number
-        ingredients: Ingredient[]
-        tradeskill: string
-        recipeLevel: number
-        cooldownSeconds?: number
-        amountPerCooldown?: number
-        bindOnPickup: boolean
-        bindOnEquip: boolean
-        minGearScore?: number
-        maxGearScore?: number
-        minGearScoreBuff?: number
-        maxGearScoreBuff?: number
-    }],
+    recipes: [Recipe],
     categories: Record<string, Record<string, string>>
 }
 
