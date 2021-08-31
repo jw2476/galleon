@@ -2,7 +2,7 @@
     <label class="label">Item</label>
     <div class="control">
         <div class="select">
-            <a href="https://nwdb.info/db/item/{recipe?.itemID}">
+            <a href="{recipe ? 'https://nwdb.info/db/item/' + recipe.itemID : ''}">
                 <select bind:value={itemName} on:change={getRecipe}>
                     {#each names as name}
                         <option>{name}</option>
@@ -26,9 +26,7 @@
 
 <script lang="ts">
     import api from "./api";
-    import {reloadEmbeds} from "./embed"
-
-    reloadEmbeds()
+    import {loadEmbeds} from "./embed"
 
     let names = []
 
@@ -45,7 +43,6 @@
 
     async function getItemChoices(recipe: Recipe) {
         for (let ingredient of recipe.ingredients) {
-            consol
             if (ingredient.type === "Category_Only") {
                 const res = await api.get("/category", {id: ingredient.ingredientID})
                 console.log(recipe)
@@ -56,6 +53,7 @@
     }
 
     async function getRecipe() {
+        loadEmbeds()
         const res = await api.get("/recipeByName", {params: {itemName}})
         recipe = res.data
         loading = true
