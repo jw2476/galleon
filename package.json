@@ -2,7 +2,7 @@
   "name": "galleon",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/dist/index.js",
   "scripts": {
     "install": "cd client && npm i && cd ../server && npm i",
     "dev": "concurrently 'npm run client' 'npm run server'",
