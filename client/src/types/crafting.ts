@@ -1,9 +1,6 @@
-import {DATA} from "../paths";
-import {readFileSync} from "fs";
-
 export type IngredientType = undefined | "Category_Only" | "Item" | "Currency"
 
-export type Ingredient = RecipeRef | Item | Category
+export type Ingredient = Recipe | Item | Category
 
 export type Item = {
     itemID: string
@@ -14,7 +11,7 @@ export type Item = {
 }
 
 export type Category = {
-    recipes: Array<RecipeRef | Item>
+    recipes: Array<Recipe | Item>
     name: string
     id: string
 }
@@ -37,11 +34,6 @@ export type Recipe = {
     nwdbURL: string
 }
 
-export type RecipeRef = {
-    itemID: string,
-    ref: true
-}
-
 export function isIngredientCategory(ingredient: Ingredient): ingredient is Category {
     return !!(ingredient as Category).recipes;
 }
@@ -50,11 +42,6 @@ export function isIngredientItem(ingredient: Ingredient): ingredient is Item {
     return !!(ingredient as Item).itemName;
 }
 
-export function isIngredientRecipe(ingredient: Ingredient): ingredient is RecipeRef {
-    return !!(ingredient as RecipeRef).ref;
-}
-
-
-export function getCraftingData(): Recipe[] {
-    return JSON.parse(readFileSync(DATA + "/crafting.json", {encoding: "utf-8"}))
+export function isIngredientRecipe(ingredient: Ingredient): ingredient is Recipe {
+    return !!(ingredient as Recipe).originalID;
 }

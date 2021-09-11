@@ -7,12 +7,12 @@ import css from 'rollup-plugin-css-only';
 import preprocess from "svelte-preprocess";
 import postcss from 'rollup-plugin-postcss'
 import json from "@rollup/plugin-json";
-
+import typescript from "@rollup/plugin-typescript";
 
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
+	input: 'src/main.ts',
 	output: {
 		sourcemap: true,
 		format: 'iife',
@@ -21,16 +21,12 @@ export default {
 	},
 	plugins: [
 		svelte({
-			compilerOptions: {
-				// enable run-time checks when not in production
-				dev: !production
-			},
-			preprocess: preprocess()
+			preprocess: preprocess(),
+			dev: !production
 		}),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
-
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -41,6 +37,10 @@ export default {
 			dedupe: ['svelte']
 		}),
 		commonjs(),
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		}),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
