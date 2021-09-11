@@ -39,9 +39,14 @@
 <script lang="ts">
     import {isIngredientCategory, isIngredientRecipe, Recipe} from "../types/crafting";
     import {loadEmbeds} from "../embed"
+    import {onMount} from "svelte";
 
     export let recipe: Recipe
     export let selectedValues: Record<string, string>
+
+    onMount(() => {
+        loadEmbeds()
+    })
 </script>
 
 <style lang="sass">

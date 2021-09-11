@@ -38,6 +38,7 @@
     import {loadEmbeds} from "./embed"
     import ItemChoice from "./request/ItemChoice.svelte";
     import {isIngredientCategory, isIngredientRecipe} from "./types/crafting";
+    import {onMount} from "svelte";
 
     let names = []
 
@@ -50,6 +51,10 @@
 
     let recipe: Recipe
     let selectedValues: Record<string, string> = {}
+
+    onMount(() => {
+        loadEmbeds()
+    })
 
     api.get("/itemNames").then(res => {
         names = ["Select an Item", ...res.data.sort()]
