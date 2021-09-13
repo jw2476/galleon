@@ -3,6 +3,7 @@ import {CompletedRecipe, isCompletedIngredientRecipe, Item} from "../types/craft
 import {Message, MessageEmbed} from "discord.js";
 import {IUser} from "../models/user"
 import bot from "../bot";
+import CraftingRequest from "../models/request";
 
 async function calculateGatheringMaterials(recipe: CompletedRecipe, baseQuantity: number, materials: Record<string, Item> = {}): Promise<Record<string, Item>> {
     for (const ingredient of recipe.ingredients) {
@@ -30,11 +31,18 @@ export default async (req: Request, res: Response) => {
     let description = ""
     for (const material of Object.values(gatheringMaterials)) {
         description += `${material.quantity}x ${material.itemName}\n`
-        if (material.itemName === undefined) console.log(material.itemID)
     }
     embed.setDescription(description)
 
     const discordUser = await bot.users.fetch(user.discordID)
     const dmChannel = await discordUser.createDM()
     await dmChannel.send(embed)
+
+    await new CraftingRequest({
+        recipe,
+        tradeskill: recipe.tradeskill,
+        requester: user
+    }).save()
+
+    res.sendStatus(200)
 }
