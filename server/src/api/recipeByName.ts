@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
-import {Category, getCraftingData, isIngredientCategory, isIngredientRecipe, Recipe} from "../types/crafting";
+import {getCraftingData, isIngredientCategory, isIngredientRecipe, Recipe} from "../types/crafting";
+import * as util from "util";
 
 let recipes = getCraftingData()
 
-async function completeRecipe(recipe: Recipe): Promise<Recipe> {
+async function completeRecipe(recipe: Recipe, quantity: number): Promise<Recipe> {
     if (!recipe || !recipe.ingredients) {
         return recipe
     }
@@ -13,18 +14,20 @@ async function completeRecipe(recipe: Recipe): Promise<Recipe> {
             for (let j = 0; j < ingredient.recipes?.length; j++) {
                 const catIngredient = ingredient.recipes[j]
                 if (isIngredientRecipe(catIngredient)) {
-                    (recipe.ingredients[i] as Category).recipes[j] = await completeRecipe(recipes.find(recipe => recipe.itemID === catIngredient.itemID))
+                    const ingredientRecipe = recipes.find(r => r.itemID === catIngredient.itemID)
+                    ingredient.recipes[j] = await completeRecipe(ingredientRecipe, catIngredient.quantity)
                 }
             }
         } else if (isIngredientRecipe(ingredient)) {
-            recipe.ingredients[i] = await completeRecipe(recipes.find(recipe => recipe.itemID === ingredient.itemID))
+            const ingredientRecipe = recipes.find(recipe => recipe.itemID === ingredient.itemID)
+            recipe.ingredients[i] = await completeRecipe(ingredientRecipe, ingredient.quantity)
         }
     }
-    return recipe
+    return {...recipe, quantity}
 }
 
 export default async (req: Request, res: Response) => {
     const {itemName} = req.query
-    const recipe = await completeRecipe(recipes.find(recipe => recipe.itemName === itemName))
+    const recipe = await completeRecipe(recipes.find(recipe => recipe.itemName === itemName), 1)
     res.json(recipe)
 }

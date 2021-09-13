@@ -64,10 +64,11 @@
         loadEmbeds()
         const res = await api.get("/recipeByName", {params: {itemName}})
         recipe = res.data
+        console.log(recipe)
         selectedValues = {}
     }
 
-    async function completeRecipe(recipe: Recipe, selectedValues: Record<string, string>): Recipe {
+    async function completeRecipe(recipe: Recipe, selectedValues: Record<string, string>): Promise<Recipe> {
         for (let i = 0; i < recipe.ingredients.length; i++) {
             const ingredient = recipe.ingredients[i]
             if (isIngredientCategory(ingredient)) {
