@@ -9,11 +9,9 @@
                 <div class="column">
                     <div class="box notification is-dark">
                         <p class="subtitle">{request.recipe.itemName}</p>
-                        {#each description(request).split("\n") as line}
-                            <p>{line}</p>
-                        {/each}
+                        <p>{description(request)}</p>
                         <br>
-                        {#if buttonText}
+                        {#if !request.materialsSubmitted && request.assignedTo}
                             <button class="button is-primary is-outlined {loading ? 'is-loading' : ''}"
                                     on:click={() => callback(request)}>{buttonText}</button>
                         {/if}
@@ -53,9 +51,8 @@
     async function callback(request: ICraftingRequestBase) {
         try {
             loading = true
-            if (await buttonCallback(request)) {
-                location.reload()
-            }
+            await buttonCallback(request)
+            request.materialsSubmitted = true
             loading = false
         } catch {
             error = true

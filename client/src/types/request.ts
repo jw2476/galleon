@@ -5,5 +5,6 @@ export type ICraftingRequestBase = {
     recipe: Recipe,
     tradeskill: string,
     requester: IUserBase,
-    assignedTo: IUserBase
+    assignedTo: IUserBase,
+    materialsSubmitted: boolean
 }

@@ -7,23 +7,43 @@
     import {onMount} from "svelte";
     import api from "./api";
     import {ICraftingRequestBase} from "./types/request";
+    import type {IUser} from "../../server/src/models/user";
+    import YourRequests from "./YourRequests.svelte";
 
     let authenticated
     let availableRequests = []
     let assignedRequests = []
+    let yourRequests = []
+    let user: IUser
 
     onMount(async () => {
         availableRequests = (await api.get("/availableRequests")).data
         assignedRequests = (await api.get("/assignedRequests")).data
-        console.log(availableRequests)
+        yourRequests = (await api.get("/yourRequests")).data
+        user = (await api.get("/me")).data
     })
 
     async function assignToRequest(request: ICraftingRequestBase) {
         await api.post("/assignToRequest", request)
+        return true
+    }
+
+    async function submitGatheringMaterials(request: ICraftingRequestBase) {
+        await api.post("/submitGatheringMaterials", request)
+        return false
     }
 
     async function completeRequest(request: ICraftingRequestBase) {
+        await api.post("/complete", request)
+        return true
+    }
 
+    function yourRequestsDescription(request: ICraftingRequestBase) {
+        return `Assigned to: ${request.assignedTo?.username ? request.assignedTo?.username : "No-one"}`
+    }
+
+    function assignedRequestsDescription(request: ICraftingRequestBase) {
+        return `Requested by: ${request.requester.username}\nMaterials Submitted: ${request.materialsSubmitted ? "Yes" : "No"}`
     }
 </script>
 
@@ -53,22 +73,33 @@
             <br>
             <section>
                 <div class="container">
-                    <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests"
-                                      buttonCallback={completeRequest} buttonText="Complete"
+                    <YourRequests bind:craftingRequests={yourRequests} title="Your Crafting Requests" description={yourRequestsDescription}
+                                      buttonCallback={submitGatheringMaterials} buttonText="Submit Gathering Materials"
                                       errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
                 </div>
             </section>
             <br>
             <br>
-            <section>
-                <div class="container">
-                    <CraftingRequests bind:craftingRequests={availableRequests} title="Available Crafting Requests"
-                                      buttonCallback={assignToRequest} buttonText="Assign to Recipe"
-                                      errorText="Someone has already assigned themselves to this request"/>
-                </div>
-            </section>
-            <br>
-            <br>
+            {#if user?.skills.length > 0}
+                <section>
+                    <div class="container">
+                        <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests" description={assignedRequestsDescription}
+                                          buttonCallback={completeRequest} buttonText="Complete"
+                                          errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
+                    </div>
+                </section>
+                <br>
+                <br>
+                <section>
+                    <div class="container">
+                        <CraftingRequests bind:craftingRequests={availableRequests} title="Available Crafting Requests"
+                                          buttonCallback={assignToRequest} buttonText="Assign to Recipe"
+                                          errorText="Someone has already assigned themselves to this request"/>
+                    </div>
+                </section>
+                <br>
+                <br>
+            {/if}
             <section>
                 <div class="container">
                     <AdminConsole/>
