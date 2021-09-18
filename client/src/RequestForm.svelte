@@ -26,6 +26,15 @@
             <ItemChoice recipe={recipe} bind:selectedValues={selectedValues}/>
         {/if}
         <div class="field">
+            <label class="label has-text-white">Quantity</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Search for items..." bind:value={quantity}>
+            </div>
+            {#if notAnIntegerError}
+                <p class="help is-danger">Not an integer</p>
+            {/if}
+        </div>
+        <div class="field">
             <div class="control">
                 <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit
                 </button>
@@ -48,7 +57,7 @@
     import api from "./api";
     import {loadEmbeds} from "./embed"
     import ItemChoice from "./request/ItemChoice.svelte";
-    import {isIngredientCategory, isIngredientRecipe} from "./types/crafting";
+    import {isIngredientCategory, isIngredientRecipe, Recipe} from "./types/crafting";
     import {onMount} from "svelte";
 
     let names = []
@@ -60,6 +69,8 @@
     let success = false
     let error = false
     let search = ""
+    let quantity = "1"
+    let notAnIntegerError = false
 
     let recipe: Recipe
     let selectedValues: Record<string, string> = {}
@@ -103,13 +114,18 @@
             success = false
             itemRequiredError = false
             itemChoiceUnselectedError = false
+            notAnIntegerError = false
             error = false
 
             if (!itemName || itemName === "Select an Item") { // Checks for not selected, svelte doesnt like select values that are added after page load
                 itemRequiredError = true
                 return
             }
-            console.log(Object.values(selectedValues))
+            if (isNaN(parseInt(quantity))) {
+                notAnIntegerError = true
+                return
+            }
+
             if (Object.values(selectedValues).includes("")) {
                 itemChoiceUnselectedError = true
                 return
@@ -118,6 +134,7 @@
             loading = true
 
             const completedRecipe = await completeRecipe(recipe, selectedValues)
+            completedRecipe.quantity = parseInt(quantity)
             await api.post("/submitRequest", completedRecipe)
 
             success = true
@@ -128,33 +145,6 @@
             error = true
             loading = false
         }
-    }
-
-    type IngredientType = undefined | "Category_Only" | "Item" | "Currency"
-
-    type Ingredient = {
-        ingredientID: string
-        ingredientName: string
-        type: IngredientType
-        quantity: number
-    }
-
-    type Recipe = {
-        itemID: string
-        itemName: string
-        itemType: string
-        outputQuantity: number
-        ingredients: Ingredient[]
-        tradeskill: string
-        recipeLevel: number
-        cooldownSeconds?: number
-        amountPerCooldown?: number
-        bindOnPickup: boolean
-        bindOnEquip: boolean
-        minGearScore?: number
-        maxGearScore?: number
-        minGearScoreBuff?: number
-        maxGearScoreBuff?: number
     }
 </script>
 
