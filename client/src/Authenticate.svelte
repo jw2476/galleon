@@ -14,6 +14,7 @@
         let res = api.post("/auth", {code, redirect_uri: window.location.href.split('?')[0]}).then(res => {
             localStorage.setItem("token", res.data)
             authenticated = true
+            location.reload()
         }).catch(error => {
             switch (error.response.status) {
                 case(400) : {

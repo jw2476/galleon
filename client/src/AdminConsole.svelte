@@ -1,18 +1,18 @@
 {#if show}
-    <div class="box">
-        <table class="table">
+    <div class="box notification is-darkish">
+        <table class="table is-dark notification">
             <thead>
-            <th>Username</th>
+            <th class="has-text-white">Username</th>
             {#each skills as skill}
-                <th>{skill}</th>
+                <th class="has-text-white">{skill}</th>
             {/each}
             </thead>
             <tbody>
             {#each users as user}
                 <tr>
-                    <th>{user.username}</th>
+                    <th class="has-text-white">{user.username}</th>
                     {#each skills as skill}
-                        <td><input type="checkbox" checked="{user.skills.includes(skill)}"
+                        <td class="has-text-white"><input type="checkbox" checked="{user.skills.includes(skill)}"
                                    on:click={() => toggle(skill, user)}></td>
                     {/each}
                 </tr>
@@ -54,3 +54,12 @@
         api.post("/setSkills", users)
     }
 </script>
+
+<style lang="sass">
+  .is-darkish
+      background-color: lighten(#363636, 5)
+      color: white
+
+  .table
+    width: 100%
+</style>

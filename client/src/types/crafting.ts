@@ -35,13 +35,13 @@ export type Recipe = {
 }
 
 export function isIngredientCategory(ingredient: Ingredient): ingredient is Category {
-    return !!(ingredient as Category).recipes;
+    return !!(ingredient as Category)?.recipes;
 }
 
 export function isIngredientItem(ingredient: Ingredient): ingredient is Item {
-    return !!(ingredient as Item).itemName;
+    return !!(ingredient as Item)?.itemName;
 }
 
 export function isIngredientRecipe(ingredient: Ingredient): ingredient is Recipe {
-    return !!(ingredient as Recipe).originalID;
+    return !!(ingredient as Recipe)?.originalID;
 }

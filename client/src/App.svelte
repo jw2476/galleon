@@ -40,43 +40,48 @@
             <Authenticate bind:authenticated={authenticated}/>
         </div>
     </section>
-    {#if authenticated}
-        <br>
-        <br>
-        <section>
-            <div class="container box">
-                <RequestForm/>
-            </div>
-        </section>
-        <br>
-        <br>
-        <section>
-            <div class="container">
-                <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests"
-                                  buttonCallback={completeRequest} buttonText="Complete"
-                                  errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
-            </div>
-        </section>
-        <br>
-        <br>
-        <section>
-            <div class="container">
-                <CraftingRequests bind:craftingRequests={availableRequests} title="Available Crafting Requests"
-                                  buttonCallback={assignToRequest} buttonText="Assign to Recipe"
-                                  errorText="Someone has already assigned themselves to this request"/>
-            </div>
-        </section>
-        <br>
-        <br>
-        <section>
-            <div class="container">
-                <AdminConsole/>
-            </div>
-        </section>
-    {/if}
+    <div class="has-background-notrlydark">
+        {#if authenticated}
+            <br>
+            <br>
+            <section>
+                <div class="container">
+                    <RequestForm/>
+                </div>
+            </section>
+            <br>
+            <br>
+            <section>
+                <div class="container">
+                    <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests"
+                                      buttonCallback={completeRequest} buttonText="Complete"
+                                      errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
+                </div>
+            </section>
+            <br>
+            <br>
+            <section>
+                <div class="container">
+                    <CraftingRequests bind:craftingRequests={availableRequests} title="Available Crafting Requests"
+                                      buttonCallback={assignToRequest} buttonText="Assign to Recipe"
+                                      errorText="Someone has already assigned themselves to this request"/>
+                </div>
+            </section>
+            <br>
+            <br>
+            <section>
+                <div class="container">
+                    <AdminConsole/>
+                </div>
+            </section>
+        {/if}
+    </div>
 </main>
 
 <style lang="sass">
   .title
     font-size: 72px
+  .has-background-notrlydark
+    background-color: lighten(#363636, 10)
+    color: white
 </style>

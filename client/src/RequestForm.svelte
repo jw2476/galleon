@@ -1,37 +1,44 @@
-<div class="field">
-    <label class="label">Item</label>
-    <div class="control">
-        <div class="select">
-            <a href="{recipe ? 'https://nwdb.info/db/recipe/' + recipe.originalID : ''}">
-                <select bind:value={itemName} on:change={getRecipe}>
-                    {#each names as name}
-                        <option>{name}</option>
-                    {/each}
-                </select>
-            </a>
+<div class="box notification is-darkish">
+    <p class="title has-text-white has-text-centered">Request an Item</p>
+    <div class="box notification is-dark">
+        <div class="field">
+            <label class="label has-text-white">Item</label>
+            <div class="control">
+                <div class="select">
+                    <a href="{recipe ? 'https://nwdb.info/db/recipe/' + recipe.originalID : ''}">
+                        <select bind:value={itemName} on:change={getRecipe}>
+                            {#each names as name}
+                                <option>{name}</option>
+                            {/each}
+                        </select>
+                    </a>
+                </div>
+            </div>
+            {#if itemRequiredError}
+                <p class="help is-danger">Please select an item</p>
+            {/if}
+        </div>
+        {#if recipe}
+            <ItemChoice recipe={recipe} bind:selectedValues={selectedValues}/>
+        {/if}
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit
+                </button>
+            </div>
+            {#if success}
+                <p class="help is-primary">Successfully requested</p>
+            {/if}
+            {#if itemChoiceUnselectedError}
+                <p class="help is-danger">One or more item choices are unselected, please fill them in</p>
+            {/if}
+            {#if error}
+                <p class="help is-danger">An error occured, please try again, if the issue persists contact Jw2476</p>
+            {/if}
         </div>
     </div>
-    {#if itemRequiredError}
-        <p class="help is-danger">Please select an item</p>
-    {/if}
 </div>
-{#if recipe}
-    <ItemChoice recipe={recipe} bind:selectedValues={selectedValues}/>
-{/if}
-<div class="field">
-    <div class="control">
-        <button class="button is-primary {loading ? 'is-loading' : ''}" on:click={submitCraftingRequest}>Submit</button>
-    </div>
-    {#if success}
-        <p class="help is-primary">Successfully requested</p>
-    {/if}
-    {#if itemChoiceUnselectedError}
-        <p class="help is-danger">One or more item choices are unselected, please fill them in</p>
-    {/if}
-    {#if error}
-        <p class="help is-danger">An error occured, please try again, if the issue persists contact Jw2476</p>
-    {/if}
-</div>
+
 
 <script lang="ts">
     import api from "./api";
@@ -51,6 +58,7 @@
 
     let recipe: Recipe
     let selectedValues: Record<string, string> = {}
+    let selectedUses: Record<string, number> = {}
 
     onMount(() => {
         loadEmbeds()
@@ -96,7 +104,8 @@
                 itemRequiredError = true
                 return
             }
-            if (Object.values(selectedValues).includes("") || (Object.keys(selectedValues).length === 0 && selectedValues.constructor === Object)) {
+            console.log(Object.values(selectedValues))
+            if (Object.values(selectedValues).includes("")) {
                 itemChoiceUnselectedError = true
                 return
             }
@@ -108,6 +117,7 @@
 
             success = true
             loading = false
+            location.reload()
         } catch (e) {
             console.error(e)
             error = true
@@ -141,5 +151,10 @@
         minGearScoreBuff?: number
         maxGearScoreBuff?: number
     }
-
 </script>
+
+<style lang="sass">
+  .is-darkish
+    background-color: lighten(#363636, 5)
+    color: white
+</style>
