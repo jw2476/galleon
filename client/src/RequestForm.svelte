@@ -1,22 +1,23 @@
 <div class="box notification is-darkish">
     <p class="title has-text-white has-text-centered">Request an Item</p>
     <div class="box notification is-dark">
-        <div class="field">
-            <label class="label has-text-white">Item</label>
+        <label class="label has-text-white">Item</label>
+        <div class="field is-grouped">
             <div class="control">
                 <div class="select">
                     <a href="{recipe ? 'https://nwdb.info/db/recipe/' + recipe.originalID : ''}">
                         <select bind:value={itemName} on:change={getRecipe}>
-                            {#each names as name}
+                            <option value="">Select an Item...</option>
+                            {#each names.filter(name => name.toLowerCase().includes(search.toLowerCase())) as name}
                                 <option>{name}</option>
                             {/each}
                         </select>
                     </a>
                 </div>
             </div>
-            {#if itemRequiredError}
-                <p class="help is-danger">Please select an item</p>
-            {/if}
+            <div class="control">
+                    <input class="input" type="text" placeholder="Search for items..." bind:value={search}>
+            </div>
         </div>
         {#if recipe}
             <ItemChoice recipe={recipe} bind:selectedValues={selectedValues}/>
@@ -55,6 +56,7 @@
     let loading = false
     let success = false
     let error = false
+    let search = ""
 
     let recipe: Recipe
     let selectedValues: Record<string, string> = {}
