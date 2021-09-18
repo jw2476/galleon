@@ -1,8 +1,14 @@
 <div class="box notification is-darkish">
     <p class="title has-text-white has-text-centered">Request an Item</p>
     <div class="box notification is-dark">
+        <div class="field">
+            <label class="label has-text-white">Search</label>
+            <div class="control">
+            <input class="input" type="text" placeholder="Search for items..." bind:value={search}>
+        </div>
+        </div>
         <label class="label has-text-white">Item</label>
-        <div class="field is-grouped">
+        <div class="field">
             <div class="control">
                 <div class="select">
                     <a href="{recipe ? 'https://nwdb.info/db/recipe/' + recipe.originalID : ''}">
@@ -14,9 +20,6 @@
                         </select>
                     </a>
                 </div>
-            </div>
-            <div class="control">
-                    <input class="input" type="text" placeholder="Search for items..." bind:value={search}>
             </div>
         </div>
         {#if recipe}
