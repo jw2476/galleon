@@ -37,6 +37,10 @@ export default async function (req: Request, res: Response) {
         const matching_users = (await Promise.all(bot.guilds.cache.map((guild: Guild) => guild.members.fetch(user.data.id)))).flat()
         if (matching_users.length !== 0) {
             const member = matching_users[0]
+            if (!member.roles.cache.has("768007257832947713")) {
+                res.sendStatus(403)
+                return
+            }
 
             const user_token = jwt.sign(member.user.id, CLIENT_SECRET)
             res.json(user_token)
