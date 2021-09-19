@@ -12,6 +12,7 @@ import me from "./me";
 import yourRequests from "./yourRequests";
 import submitGatheringMaterials from "./submitGatheringMaterials";
 import complete from "./complete";
+import requests from "./requests";
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.get("/itemNames", itemNames)
 router.get("/me", me)
 router.get("/assignedRequests", assignedRequests)
 router.get("/recipeByName", recipeByName)
+router.get("/requests", requests)
 router.get("/availableRequests", availableRequests)
 router.post("/setSkills", setSkills)
 router.post("/submitGatheringMaterials", submitGatheringMaterials)

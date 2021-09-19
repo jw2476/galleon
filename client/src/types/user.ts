@@ -4,5 +4,6 @@ export type IUserBase = {
     guildName: string,
     guildID: string,
     skills: string[],
-    admin: boolean
+    admin: boolean,
+    completed: number
 }
