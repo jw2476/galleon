@@ -152,4 +152,7 @@
   .is-darkish
     background-color: lighten(#363636, 5)
     color: white
+
+  .select, select
+    width: 100%
 </style>
