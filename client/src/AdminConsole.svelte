@@ -28,7 +28,7 @@
             {/each}
             </thead>
             <tbody>
-            {#each users as user}
+            {#each users.filter(user => Object.keys(user.skills).length !== 0) as user}
                 <tr>
                     <th class="has-text-white">{user.username}</th>
                     {#each skills as skill}
@@ -57,7 +57,7 @@
         {/each}
         <br>
         <p class="subtitle">Completed Requests per Crafter</p>
-        {#each users.filter(user => user.skills.length !== 0) as user}
+        {#each users.filter(user => Object.keys(user.skills).length !== 0) as user}
             <p>{user.username}: {user.completed ? user.completed : "0"}</p>
         {/each}
     </div>
