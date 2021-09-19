@@ -35,8 +35,12 @@ app.use("/api", async (req, res, next) => {
         return
     }
     try {
-        let username = jwt.verify(req.headers.authorization, CLIENT_SECRET) as string // Removes jwt payload
-        res.locals.user = await User.findOne({username})
+        let usernameOrID = jwt.verify(req.headers.authorization, CLIENT_SECRET) as string // Removes jwt payload
+        if (isNaN(parseInt(usernameOrID))) {
+            res.locals.user = await User.findOne({username: usernameOrID})
+        } else {
+            res.locals.user = await User.findOne({discordID: usernameOrID})
+        }
         next()
     } catch {
         next()

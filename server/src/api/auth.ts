@@ -38,7 +38,7 @@ export default async function (req: Request, res: Response) {
         if (matching_users.length !== 0) {
             const member = matching_users[0]
 
-            const user_token = jwt.sign(member.user.username, CLIENT_SECRET)
+            const user_token = jwt.sign(member.user.id, CLIENT_SECRET)
             res.json(user_token)
             if (!await User.findOne({discordID: member.user.id})) {
                 await new User({

@@ -1,6 +1,7 @@
 <script>
     import api from "./api";
     import {Button, Progress} from "svelma"
+    import {onMount} from "svelte";
 
     const AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=873136954290610208&redirect_uri=${encodeURI(window.location.href)}&response_type=code&scope=identify`
 
@@ -9,6 +10,15 @@
     let authenticating = code && !authenticated
     let invalid_code = false
     let forbidden = false
+
+
+    onMount(async () => {
+        if (authenticated) {
+            let res = await api.post("/login", {token: localStorage.getItem("token")}) // TODO: Reset token to discord ID not username
+            localStorage.setItem("token", res.data)
+        }
+    })
+
 
     if (authenticating) {
         let res = api.post("/auth", {code, redirect_uri: window.location.href.split('?')[0]}).then(res => {
