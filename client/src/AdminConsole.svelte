@@ -12,8 +12,31 @@
                 <tr>
                     <th class="has-text-white">{user.username}</th>
                     {#each skills as skill}
-                        <td class="has-text-white"><input type="checkbox" checked="{user.skills.includes(skill)}"
+                        <td class="has-text-white"><input type="checkbox" checked="{user.skills[skill] !== undefined}"
                                    on:click={() => toggle(skill, user)}></td>
+                    {/each}
+                </tr>
+            {/each}
+
+            </tbody>
+        </table>
+        <table class="table is-dark notification">
+            <thead>
+            <th class="has-text-white">Username</th>
+            {#each skills as skill}
+                <th class="has-text-white">{skill}</th>
+            {/each}
+            </thead>
+            <tbody>
+            {#each users as user}
+                <tr>
+                    <th class="has-text-white">{user.username}</th>
+                    {#each skills as skill}
+                        {#if user.skills[skill] !== undefined}
+                            <td class="has-text-white"><input type="text" class="input" placeholder="0" bind:value={user.skills[skill]}></td>
+                        {:else}
+                            <td>N/A</td>
+                        {/if}
                     {/each}
                 </tr>
             {/each}
@@ -56,6 +79,12 @@
     onMount(async () => {
         requests = (await api.get("requests")).data
         users = (await api.get("/users")).data
+
+        for (const user of users) {
+            if (!user.skills) {
+                user.skills = {}
+            }
+        }
         show = true
         for (const request of requests) {
             if (assignedRequests[request.assignedTo?.username] === undefined) {
@@ -67,14 +96,11 @@
         delete assignedRequests[undefined]
     })
 
-    function toggle(skill, user) {
-        if (user.skills.includes(skill)) {
-            const index = user.skills.indexOf(skill);
-            if (index > -1) {
-                user.skills.splice(index, 1);
-            }
+    function toggle(skill: string, user: IUserBase) {
+        if (user.skills[skill] !== undefined) {
+            delete skills[skill]
         } else {
-            user.skills.push(skill)
+            user.skills[skill] = 0
         }
     }
 

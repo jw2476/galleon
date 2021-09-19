@@ -5,7 +5,7 @@ type IUserBase = {
     discordID: string,
     guildName: string,
     guildID: string,
-    skills: string[],
+    skills: Record<string, number>,
     admin: boolean,
     completed: number
 }
@@ -17,7 +17,7 @@ const userSchema = new Schema({
     discordID: String,
     guildName: String,
     guildID: String,
-    skills: [String],
+    skills: Object,
     admin: Boolean,
     completed: Number
 })

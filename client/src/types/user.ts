@@ -3,7 +3,7 @@ export type IUserBase = {
     discordID: string,
     guildName: string,
     guildID: string,
-    skills: string[],
+    skills: Record<string, number>,
     admin: boolean,
     completed: number
 }

@@ -4,7 +4,7 @@ import {config} from "dotenv"
 import bot from "./bot";
 import {connect} from "mongoose"
 import * as jwt from "jsonwebtoken"
-import User from "./models/user";
+import User, {IUser} from "./models/user";
 import * as cors from "cors"
 
 const {
@@ -18,7 +18,7 @@ config()
 connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(() => {
+}).then(async () => {
     console.log("DB Connected!")
 })
 

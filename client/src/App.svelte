@@ -80,7 +80,7 @@
             </section>
             <br>
             <br>
-            {#if user?.skills.length > 0}
+            {#if user?.skills && Object.keys(user?.skills).length > 0}
                 <section>
                     <div class="container">
                         <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests" description={assignedRequestsDescription}
