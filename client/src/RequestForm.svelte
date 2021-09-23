@@ -48,6 +48,9 @@
             {#if error}
                 <p class="help is-danger">An error occured, please try again, if the issue persists contact Jw2476</p>
             {/if}
+            {#if ledgendaryCheck}
+                <p class="help is-danger">One or more of the ingredients of this recipe is time limited, so your request may take a very, very long time to be completed. If you are sure this is okay, submit the request again.</p>
+            {/if}
         </div>
     </div>
 </div>
@@ -110,7 +113,24 @@
         return recipe
     }
 
-    async function checkForT51(recipe: Recipe)
+    async function checkForT51(recipe: Recipe): Promise<boolean> {
+        for (const ingredient of recipe.ingredients) {
+            if (isIngredientCategory(ingredient)) {
+                const selectedValue = ingredient.recipes.find(recipe => recipe.itemID === selectedValues[ingredient.id])
+                if (isIngredientRecipe(selectedValue)) {
+                    const res = await checkForT51(selectedValue)
+                    if (res) return true
+                } else {
+                    if (selectedValue.itemID.endsWith("t51")) return true
+                }
+            } else if (isIngredientRecipe(ingredient)) {
+                const res = await checkForT51(ingredient)
+                if (res) return true
+            } else {
+                if (ingredient.itemID.endsWith("t51")) return true
+            }
+        }
+    }
 
     async function submitCraftingRequest() {
         try {
@@ -138,6 +158,13 @@
 
             const completedRecipe = await completeRecipe(recipe, selectedValues)
             completedRecipe.quantity = parseInt(quantity)
+
+            if (!ledgendaryCheck && await checkForT51(completedRecipe)) {
+                ledgendaryCheck = true
+                loading = false
+                return
+            }
+
             await api.post("/submitRequest", completedRecipe)
 
             success = true
