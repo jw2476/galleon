@@ -8,7 +8,6 @@
     import api from "./api";
     import {ICraftingRequestBase} from "./types/request";
     import type {IUser} from "../../server/src/models/user";
-    import YourRequests from "./YourRequests.svelte";
 
     let authenticated
     let availableRequests = []
@@ -29,8 +28,10 @@
     }
 
     async function submitGatheringMaterials(request: ICraftingRequestBase) {
+        if (request.materialsSubmitted) return
         await api.post("/submitGatheringMaterials", request)
-        return false
+        request.materialsSubmitted = true
+        return true
     }
 
     async function completeRequest(request: ICraftingRequestBase) {
@@ -39,7 +40,7 @@
     }
 
     function yourRequestsDescription(request: ICraftingRequestBase) {
-        return `Assigned to: ${request.assignedTo?.username ? request.assignedTo?.username : "No-one"}`
+        return `Assigned to: ${request.assignedTo?.username ? request.assignedTo?.username : "No-one"}\nMaterials Submitted: ${request.materialsSubmitted ? "Yes" : "No"}`
     }
 
     function assignedRequestsDescription(request: ICraftingRequestBase) {
@@ -73,8 +74,8 @@
             <br>
             <section>
                 <div class="container">
-                    <YourRequests bind:craftingRequests={yourRequests} title="Your Crafting Requests" description={yourRequestsDescription}
-                                      buttonCallback={submitGatheringMaterials} buttonText="Submit Gathering Materials"
+                    <CraftingRequests bind:craftingRequests={yourRequests} title="Your Crafting Requests" description={yourRequestsDescription}
+                                      buttonCallback={submitGatheringMaterials} buttonText="Submit Gathering Materials" cancelable="true"
                                       errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
                 </div>
             </section>
@@ -84,7 +85,7 @@
                 <section>
                     <div class="container">
                         <CraftingRequests bind:craftingRequests={assignedRequests} title="Assigned Crafting Requests" description={assignedRequestsDescription}
-                                          buttonCallback={completeRequest} buttonText="Complete"
+                                          buttonCallback={completeRequest} buttonText="Complete" cancelable="true" reasonRequired="true"
                                           errorText="There was an error trying to complete the request, please retry and if the issue persists contact Jw2476"/>
                     </div>
                 </section>

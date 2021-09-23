@@ -14,11 +14,13 @@ import submitGatheringMaterials from "./submitGatheringMaterials";
 import complete from "./complete";
 import requests from "./requests";
 import login from "./login";
+import cancel from "./cancel";
 
 const router = Router();
 
 router.post("/assignToRequest", assignToRequest)
 router.post("/auth", auth)
+router.post("/cancel", cancel)
 router.post("/complete", complete)
 router.get("/itemNames", itemNames)
 router.post("/login", login)

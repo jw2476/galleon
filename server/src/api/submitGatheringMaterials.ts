@@ -9,8 +9,9 @@ export default async (req: Request, res: Response) => {
     await request.save()
 
     res.sendStatus(200)
-
-    const assignedTo = await bot.users.fetch(request.assignedTo.discordID)
-    const dmChannel = await assignedTo.createDM()
-    await dmChannel.send(`The request for ${request.recipe.itemName} by ${user.username} has had its gathering materials submitted`)
+    if (request.assignedTo) {
+        const assignedTo = await bot.users.fetch(request.assignedTo.discordID)
+        const dmChannel = await assignedTo.createDM()
+        await dmChannel.send(`The request for ${request.recipe.itemName} by ${user.username} has had its gathering materials submitted`)
+    }
 }

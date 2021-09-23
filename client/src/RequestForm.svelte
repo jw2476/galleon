@@ -71,6 +71,7 @@
     let search = ""
     let quantity = "1"
     let notAnIntegerError = false
+    let ledgendaryCheck = false
 
     let recipe: Recipe
     let selectedValues: Record<string, string> = {}
@@ -108,6 +109,8 @@
         }
         return recipe
     }
+
+    async function checkForT51(recipe: Recipe)
 
     async function submitCraftingRequest() {
         try {
