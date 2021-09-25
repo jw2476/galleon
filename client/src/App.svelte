@@ -16,9 +16,9 @@
     let user: IUser
 
     onMount(async () => {
+        yourRequests = (await api.get("/yourRequests")).data
         availableRequests = (await api.get("/availableRequests")).data
         assignedRequests = (await api.get("/assignedRequests")).data
-        yourRequests = (await api.get("/yourRequests")).data
         user = (await api.get("/me")).data
     })
 
