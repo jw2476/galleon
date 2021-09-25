@@ -37,6 +37,6 @@ export default async (req: Request, res: Response) => {
     const guild = await bot.guilds.fetch(user.guildID)
     const channel = guild.channels.cache.find(channel => channel.name === "🔨│crafting-requests") as TextChannel
     if (channel) {
-        // await channel.send(`${discordUser} has requested ${recipe.quantity}x ${recipe.itemName}`)
+        await channel.send(`${discordUser} has requested ${recipe.quantity}x ${recipe.itemName}`)
     }
 }
