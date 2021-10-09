@@ -24,7 +24,7 @@ export default async (req: Request, res: Response) => {
 
     const gatheringMaterials = await calculateGatheringMaterials(craftingRequest.recipe, craftingRequest.recipe.quantity)
     const embed = new MessageEmbed()
-        .setTitle(`Gathering Materials for ${craftingRequest.recipe.quantity}x ${craftingRequest.recipe.itemName}`)
+        .setTitle(`Gathering Materials for ${craftingRequest.recipe.quantity}x ${craftingRequest.recipe.itemName} by ${craftingRequest.requester.username}`)
         .setColor("#6200EE")
     let description = ""
     for (const material of Object.values(gatheringMaterials)) {

@@ -8,7 +8,7 @@
             {#each row as request, j}
                 <div class="column">
                     <div class="box notification is-dark">
-                        <p class="subtitle">{request.recipe.itemName}</p>
+                        <p class="subtitle">{request.recipe.quantity}x {request.recipe.itemName}</p>
                         {#each description(request).split("\n") as line}
                             <p>{line}</p>
                         {/each}

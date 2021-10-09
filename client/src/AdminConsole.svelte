@@ -98,7 +98,8 @@
 
     function toggle(skill: string, user: IUserBase) {
         if (user.skills[skill] !== undefined) {
-            delete skills[skill]
+            delete user.skills[skill]
+            console.log("deleted")
         } else {
             user.skills[skill] = 0
         }
